@@ -1,0 +1,8 @@
+Your task is to extract key information from the provided resume text.
+Focus on the details that are relevant to the job application, such as:
+- Work experience
+- Education
+- Skills
+- Certifications
+- Achievements
+Ensure the extracted information is clear, concise, and formatted in a way that can be easily compared with the job description.
