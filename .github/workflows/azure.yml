@@ -24,25 +24,9 @@ jobs:
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v2
 
-    - name: Debug environment variables
-      run: |
-        echo "Docker username length: ${#DOCKER_USERNAME}"
-        echo "Docker PAT length: ${#DOCKER_PAT}"
-        if [ -z "$DOCKER_USERNAME" ]; then
-          echo "❌ DOCKER_USERNAME is empty"
-        else
-          echo "✅ DOCKER_USERNAME is set"
-        fi
-        if [ -z "$DOCKER_PAT" ]; then
-          echo "❌ DOCKER_PAT is empty"
-        else
-          echo "✅ DOCKER_PAT is set"
-        fi
-
     - name: Log in to registry
       uses: docker/login-action@v2
       with:
-        registry: index.docker.io
         username: ${{ env.DOCKER_USERNAME }}
         password: ${{ env.DOCKER_PAT }}
 
@@ -50,7 +34,7 @@ jobs:
       uses: docker/build-push-action@v3
       with:
         push: true
-        tags: index.docker.io/${{ env.DOCKER_USERNAME }}/resumereviewer:${{ github.sha }}
+        tags: ${{ env.DOCKER_USERNAME }}/resumereviewer:${{ github.sha }}
         file: ./Dockerfile
 
   deploy:
@@ -68,4 +52,4 @@ jobs:
         app-name: 'resume-reviewer'
         slot-name: 'Development'
         publish-profile: ${{ env.AZURE_PUBLISH_PROFILE }}
-        images: 'index.docker.io/${{ env.DOCKER_USERNAME }}/resumereviewer:${{ github.sha }}'
+        images: '${{ env.DOCKER_USERNAME }}/resumereviewer:${{ github.sha }}'
