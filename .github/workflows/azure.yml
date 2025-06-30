@@ -8,6 +8,12 @@ on:
     tags:
       - v.*
 
+env:
+  # Repository secrets and variables
+  DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+  DOCKER_PAT: ${{ secrets.DOCKER_PAT }}
+  AZURE_PUBLISH_PROFILE: ${{ secrets.AzureAppService_PublishProfile_8f6b4448486f4c6cabd8886632b5bb31 }}
+
 jobs:
   build:
     runs-on: 'ubuntu-latest'
@@ -22,14 +28,14 @@ jobs:
       uses: docker/login-action@v2
       with:
         registry: https://index.docker.io/v1/
-        username: ${{ github.repository.secrets.DOCKER_USERNAME }}
-        password: ${{ github.repository.secrets.DOCKER_PAT }}
+        username: ${{ env.DOCKER_USERNAME }}
+        password: ${{ env.DOCKER_PAT }}
 
     - name: Build and push container image to registry
       uses: docker/build-push-action@v3
       with:
         push: true
-        tags: index.docker.io/${{ github.repository.secrets.DOCKER_USERNAME }}/resumereviewer:${{ github.sha }}
+        tags: index.docker.io/${{ env.DOCKER_USERNAME }}/resumereviewer:${{ github.sha }}
         file: ./Dockerfile
 
   deploy:
@@ -46,5 +52,5 @@ jobs:
       with:
         app-name: 'resume-reviewer'
         slot-name: 'Development'
-        publish-profile: ${{ github.repository.secrets.AzureAppService_PublishProfile_8f6b4448486f4c6cabd8886632b5bb31 }}
-        images: 'index.docker.io/${{ github.repository.secrets.DOCKER_USERNAME }}/resumereviewer:${{ github.sha }}'
+        publish-profile: ${{ env.AZURE_PUBLISH_PROFILE }}
+        images: 'index.docker.io/${{ env.DOCKER_USERNAME }}/resumereviewer:${{ github.sha }}'
