@@ -6,7 +6,7 @@ name: Build and deploy container app to Azure Web App - resume-reviewer
 on:
   push:
     tags:
-      - v.*
+      - v*
 
 env:
   # Repository secrets and variables
